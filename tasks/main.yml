@@ -1,0 +1,171 @@
+---
+- name: add partner repo
+  apt_repository: repo='deb http://archive.canonical.com/ubuntu trusty partner' state=present update_cache=yes
+
+- name: install editors
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "vim"
+      - "leafpad"
+      - "gedit"
+  tags: editors
+
+- name: install media
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "geeqie"
+      - "vlc"
+      - "mplayer"
+      - "mencoder"
+      - "kaffeine"
+      - "alsa-utils"
+      - "pulseaudio-utils"
+      - "ripperx"
+      - "ripoff"
+      - "ripit"
+      - "ubuntu-restricted-extras"
+      - "libavcodec-extra"
+      - "libdvdread4"
+      - "pepperflashplugin-nonfree"
+  tags: media
+
+- name: install hexeditors
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=yes
+  with_items:
+      - "ghex"
+      - "okteta"
+      - "wxhexeditor"
+      - "radare-gtk"
+      - "radare2"
+      - "radare2-plugins"
+      - "hexer"
+      - "lfhex"
+      - "hexdiff"
+      - "beav"
+      - "bless"
+  tags: hexeditors
+
+- name: install mail
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "postfix"
+      - "mutt"
+      - "offlineimap"
+      - "msmtp"
+      - "thunderbird"
+  tags: mail
+
+- name: install devel
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "python-pip"
+      - "ruby-full"
+      - "perl"
+      - "build-essential"
+  tags: devel
+
+- name: install crossdevel
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "g++-mingw-w64-i686"
+      - "g++-mingw-w64-x86-64"
+      - "mingw-w64-tools"
+  tags: crossdevel
+
+- name: install dvcs
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "subversion"
+      - "subversion-tools"
+      - "git"
+      - "bzr"
+      - "mercurial"
+  tags: dvcs
+
+- name: install utilities
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "screen"
+      - "tmux"
+      - "mc"
+      - "rar"
+      - "unrar"
+      - "p7zip-full"
+      - "unzip"
+      - "zip"
+      - "acct"
+      - "iotop"
+      - "htop"
+      - "atop"
+      - "zsh"
+      - "dcfldd"
+      - "libdate-manip-perl"
+      - "uml-utilities"
+  tags: utils
+
+- name: install x11 utilities
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "root-tail"
+      - "conky"
+      - "gnome-commander"
+      - "arandr"
+      - "clipit"
+      - "brasero"
+      - "xfce4-power-manager"
+  tags: x11utils
+
+- name: install network
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "openssh-server"
+      - "openvpn"
+      - "vpnc"
+      - "lftp"
+      - "ncftp"
+      - "gftp"
+      - "chromium-browser"
+      - "wget"
+      - "curl"
+      - "rtorrent"
+      - "transmission"
+      - "transmission-daemon"
+      - "transmission-remote-cli"
+      - "transmission-remote-gtk"
+      - "network-manager-openvpn-gnome"
+      - "network-manager-vpnc-gnome"
+      - "skype"
+  tags: network
+
+- name: install window managers
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "i3"
+      - "awesome"
+      - "icewm"
+  tags: windowmanagers
+
+- name: install security related packages
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "chkrootkit"
+      - "rkhunter"
+      - "debsums"
+      - "keepassx"
+      - "kpcli"
+      - "wipe"
+      - "secure-delete"
+  tags: security-defend
+
