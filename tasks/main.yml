@@ -22,6 +22,7 @@
       - "kaffeine"
       - "alsa-utils"
       - "pulseaudio-utils"
+      - "pavucontrol"
       - "ripperx"
       - "ripoff"
       - "ripit"
@@ -63,10 +64,13 @@
   sudo: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
+      - "build-essential"
       - "python-pip"
       - "ruby-full"
       - "perl"
-      - "build-essential"
+      - "perl-doc"
+      - "golang"
+      - "gccgo-go"
   tags: devel
 
 - name: install crossdevel
@@ -120,6 +124,7 @@
       - "gnome-commander"
       - "arandr"
       - "clipit"
+      - "shutter"
       - "brasero"
       - "xfce4-power-manager"
   tags: x11utils
