@@ -142,6 +142,8 @@
       - "chromium-browser"
       - "wget"
       - "curl"
+      - "tsocks"
+      - "proxychains"
       - "rtorrent"
       - "transmission"
       - "transmission-daemon"
