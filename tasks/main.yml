@@ -1,6 +1,6 @@
 ---
 - name: add partner repo
-  apt_repository: repo='deb http://archive.canonical.com/ubuntu trusty partner' state=present update_cache=yes
+  apt_repository: repo="deb http://archive.canonical.com/ubuntu {{ansible_distribution_release}} partner" state=present update_cache=yes
 
 - name: install editors
   sudo: yes
