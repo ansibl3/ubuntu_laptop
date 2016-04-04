@@ -30,6 +30,7 @@
       - "libavcodec-extra"
       - "libdvdread4"
       - "pepperflashplugin-nonfree"
+      - "gnome-media"
   tags: media
 
 - name: install hexeditors
