@@ -12,6 +12,16 @@
       - "gedit"
   tags: editors
 
+- name: install ubuntu media
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+      - "ubuntu-restricted-extras"
+      - "ripoff"
+      - "gnome-media"
+  tags: ubuntumedia
+
 - name: install media
   sudo: yes
   action: apt pkg="{{item}}" state=present update_cache=no
@@ -25,13 +35,10 @@
       - "pulseaudio-utils"
       - "pavucontrol"
       - "ripperx"
-      - "ripoff"
       - "ripit"
-      - "ubuntu-restricted-extras"
       - "libavcodec-extra"
       - "libdvdread4"
       - "pepperflashplugin-nonfree"
-      - "gnome-media"
   tags: media
 
 - name: install hexeditors
@@ -41,15 +48,22 @@
       - "ghex"
       - "okteta"
       - "wxhexeditor"
-      - "radare-gtk"
       - "radare2"
-      - "radare2-plugins"
       - "hexer"
       - "lfhex"
-      - "hexdiff"
       - "beav"
       - "bless"
   tags: hexeditors
+
+- name: install hexeditors ubuntu
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=yes
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+      - "hexdiff"
+      - "radare-gtk"
+      - "radare2-plugins"
+  tags: hexeditors-ubuntu
 
 - name: install mail
   sudo: yes
@@ -59,8 +73,23 @@
       - "mutt"
       - "offlineimap"
       - "msmtp"
-      - "thunderbird"
   tags: mail
+
+- name: install mail ubuntu
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=yes
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+      - "thunderbird"
+  tags: mail-ubuntu
+
+- name: install mail debian
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Kali'
+  with_items:
+      - "icedove"
+  tags: mail-debian
 
 - name: install devel
   sudo: yes
@@ -72,8 +101,15 @@
       - "perl"
       - "perl-doc"
       - "golang"
-      - "gccgo-go"
   tags: devel
+
+- name: install devel ubuntu
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+      - "gccgo-go"
+  tags: devel-ubuntu
 
 - name: install crossdevel
   sudo: yes
@@ -141,7 +177,6 @@
       - "lftp"
       - "ncftp"
       - "gftp"
-      - "chromium-browser"
       - "wget"
       - "curl"
       - "tsocks"
@@ -153,8 +188,24 @@
       - "transmission-remote-gtk"
       - "network-manager-openvpn-gnome"
       - "network-manager-vpnc-gnome"
-      - "skype"
   tags: network
+
+- name: install network ubuntu
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  when: ansible_distribution == 'Ubuntu'
+  with_items:
+      - "chromium-browser"
+      - "skype"
+  tags: network-ubuntu network
+
+- name: install network debian
+  sudo: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Kali'
+  with_items:
+      - "chromium"
+  tags: network-debian network
 
 - name: install window managers
   sudo: yes
