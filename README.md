@@ -1,4 +1,4 @@
 ansible.ubuntu.laptop
 ================================
 
-sudo ansible-playbook --connection=local --sudo -vvvv run.yml
+sudo ansible-playbook --connection=local -i localhost, -vvvv run.yml
