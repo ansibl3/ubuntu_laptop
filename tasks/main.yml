@@ -4,7 +4,7 @@
   when: ansible_distribution == 'Ubuntu'
 
 - name: install editors
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "vim"
@@ -13,7 +13,7 @@
   tags: editors
 
 - name: install ubuntu media
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   when: ansible_distribution == 'Ubuntu'
   with_items:
@@ -22,7 +22,7 @@
   tags: ubuntumedia
 
 - name: install media
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "geeqie"
@@ -41,7 +41,7 @@
   tags: media
 
 - name: install hexeditors
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=yes
   with_items:
       - "ghex"
@@ -55,7 +55,7 @@
   tags: hexeditors
 
 - name: install hexeditors ubuntu
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=yes
   when: ansible_distribution == 'Ubuntu'
   with_items:
@@ -63,7 +63,7 @@
   tags: hexeditors-ubuntu
 
 - name: install mail
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "postfix"
@@ -73,7 +73,7 @@
   tags: mail
 
 - name: install mail ubuntu
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=yes
   when: ansible_distribution == 'Ubuntu'
   with_items:
@@ -81,7 +81,7 @@
   tags: mail-ubuntu
 
 - name: install mail debian
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Kali'
   with_items:
@@ -89,7 +89,7 @@
   tags: mail-debian
 
 - name: install devel
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "build-essential"
@@ -101,7 +101,7 @@
   tags: devel
 
 - name: install devel ubuntu
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   when: ansible_distribution == 'Ubuntu'
   with_items:
@@ -109,7 +109,7 @@
   tags: devel-ubuntu
 
 - name: install crossdevel
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "g++-mingw-w64-i686"
@@ -118,7 +118,7 @@
   tags: crossdevel
 
 - name: install dvcs
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "subversion"
@@ -129,7 +129,7 @@
   tags: dvcs
 
 - name: install utilities
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "screen"
@@ -151,7 +151,7 @@
   tags: utils
 
 - name: install x11 utilities
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "root-tail"
@@ -165,7 +165,7 @@
   tags: x11utils
 
 - name: install network
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "openssh-server"
@@ -188,7 +188,7 @@
   tags: network
 
 - name: install network ubuntu
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   when: ansible_distribution == 'Ubuntu'
   with_items:
@@ -196,7 +196,7 @@
   tags: network-ubuntu network
 
 - name: install network debian
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Kali'
   with_items:
@@ -204,7 +204,7 @@
   tags: network-debian network
 
 - name: install window managers
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "i3"
@@ -213,7 +213,7 @@
   tags: windowmanagers
 
 - name: install security related packages
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "chkrootkit"
@@ -227,7 +227,7 @@
 
 
 - name: install remote desktop related packages
-  sudo: yes
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '18.04'
   with_items:
