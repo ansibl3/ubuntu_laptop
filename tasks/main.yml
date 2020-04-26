@@ -3,14 +3,29 @@
   apt_repository: repo="deb http://archive.canonical.com/ubuntu {{ansible_distribution_release}} partner" state=present update_cache=yes
   when: ansible_distribution == 'Ubuntu'
 
+- name: install legacy editors
+  become: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '<='))
+  with_items:
+      - "leafpad"
+  tags: editors
+
 - name: install editors
   become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "vim"
-      - "leafpad"
       - "gedit"
   tags: editors
+
+- name: install legacy ubuntu media
+  become: yes
+  action: apt pkg="{{item}}" state=present update_cache=no
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('16.04', '<='))
+  with_items:
+      - "leafpad"
+  tags: ubuntumedia
 
 - name: install ubuntu media
   become: yes
@@ -20,6 +35,22 @@
       - "ubuntu-restricted-extras"
       - "ripoff"
   tags: ubuntumedia
+
+- name: install legacy media
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '<='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "libdvdread4"
+  tags: media
+
+- name: install new media
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '>='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "libdvdread7"
+  tags: media
 
 - name: install media
   become: yes
@@ -36,9 +67,16 @@
       - "ripperx"
       - "ripit"
       - "libavcodec-extra"
-      - "libdvdread4"
       - "pepperflashplugin-nonfree"
   tags: media
+
+- name: install legacy hexeditors
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '<='))
+  action: apt pkg="{{item}}" state=present update_cache=yes
+  with_items:
+      - "lfhex"
+  tags: hexeditors
 
 - name: install hexeditors
   become: yes
@@ -49,7 +87,6 @@
       - "wxhexeditor"
       - "radare2"
       - "hexer"
-      - "lfhex"
       - "beav"
       - "bless"
   tags: hexeditors
@@ -88,12 +125,28 @@
       - "icedove"
   tags: mail-debian
 
+- name: install legacy devel
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '<='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "python-pip"
+  tags: devel
+
+- name: install new devel
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '>='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "python-pip-whl"
+      - "python3-pip"
+  tags: devel
+
 - name: install devel
   become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "build-essential"
-      - "python-pip"
       - "ruby-full"
       - "perl"
       - "perl-doc"
@@ -152,17 +205,47 @@
 
 - name: install x11 utilities
   become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '<='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "gnome-commander"
+  tags: x11utils
+
+- name: install legacy x11 utilities
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '<='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "shutter"
+  tags: x11utils
+
+- name: install x11 utilities
+  become: yes
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "root-tail"
       - "conky"
-      - "gnome-commander"
       - "arandr"
       - "clipit"
-      - "shutter"
       - "brasero"
       - "xfce4-power-manager"
   tags: x11utils
+
+- name: install legacy network
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '<='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "transmission-remote-cli"
+  tags: network
+
+- name: install new network
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '>'))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "transmission-cli"
+  tags: network
 
 - name: install network
   become: yes
@@ -181,7 +264,6 @@
       - "rtorrent"
       - "transmission"
       - "transmission-daemon"
-      - "transmission-remote-cli"
       - "transmission-remote-gtk"
       - "network-manager-openvpn-gnome"
       - "network-manager-vpnc-gnome"

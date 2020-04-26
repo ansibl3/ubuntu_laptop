@@ -4,7 +4,7 @@ galaxy_info:
   description: Installs packages on ubuntu
   company: kost
   license: BSD
-  min_ansible_version: 1.5
+  min_ansible_version: 2.5
   platforms:
   - name: Ubuntu
   - name: Debian
