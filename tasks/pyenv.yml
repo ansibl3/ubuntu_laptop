@@ -1,0 +1,41 @@
+---
+- name: Install prerequisites for pyenv
+  apt:
+    name:
+      - make
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - wget
+      - curl
+      - llvm
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
+      - git
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Clone pyenv repository
+  git:
+    repo: "https://github.com/pyenv/pyenv.git"
+    dest: "{{ ansible_env.HOME }}/.pyenv"
+    version: master
+    update: yes
+
+- name: Clone pyenv-virtualenv plugin
+  git:
+    repo: "https://github.com/pyenv/pyenv-virtualenv.git"
+    dest: "{{ ansible_env.HOME }}/.pyenv/plugins/pyenv-virtualenv"
+    version: master
+    update: yes
+
+
