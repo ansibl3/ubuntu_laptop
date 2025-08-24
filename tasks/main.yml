@@ -1,7 +1,7 @@
 ---
 - name: add partner repo
   apt_repository: repo="deb http://archive.canonical.com/ubuntu {{ansible_distribution_release}} partner" state=present update_cache=yes
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('22.04', '<='))
 
 - name: install legacy editors
   become: yes
@@ -49,7 +49,7 @@
   when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '>='))
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
-      - "libdvdread7"
+      - "libdvdread8t64"
   tags: media
 
 - name: install media
@@ -67,7 +67,7 @@
       - "ripperx"
       - "ripit"
       - "libavcodec-extra"
-      - "pepperflashplugin-nonfree"
+#      - "pepperflashplugin-nonfree"
   tags: media
 
 - name: install legacy hexeditors
@@ -88,7 +88,7 @@
       - "radare2"
       - "hexer"
       - "beav"
-      - "bless"
+#      - "bless"
   tags: hexeditors
 
 - name: install hexeditors ubuntu
@@ -138,7 +138,6 @@
   when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('18.04', '>='))
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
-      - "python-pip-whl"
       - "python3-pip"
   tags: devel
 
@@ -224,9 +223,9 @@
   action: apt pkg="{{item}}" state=present update_cache=no
   with_items:
       - "root-tail"
-      - "conky"
+      - "conky-all"
       - "arandr"
-      - "clipit"
+      - "diodon"
       - "brasero"
       - "xfce4-power-manager"
   tags: x11utils
@@ -238,6 +237,16 @@
   with_items:
       - "transmission-remote-cli"
   tags: network
+
+- name: install crypt
+  become: yes
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('24.04', '>='))
+  action: apt pkg="{{item}}" state=present update_cache=no
+  with_items:
+      - "gocryptfs"
+      - "zulucrypt-cli"
+      - "zulucrypt-gui"
+  tags: crypt
 
 - name: install new network
   become: yes
