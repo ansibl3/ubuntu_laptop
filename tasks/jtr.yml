@@ -1,0 +1,123 @@
+---
+- name: Build John the Ripper from source on Ubuntu
+  hosts: localhost
+  become: yes
+  vars:
+    # === User-defined variables ===
+    src_dir: /tmp/john
+    john_make_jobs: 4
+    john_configure_opts: ""
+    gpu_vendor: ""              # Set to "nvidia", "amd", or leave empty
+    rexgen_enable: true        # Set to true to build Rexgen
+    mpi_enable: false          # Set to true to build MPI
+    benchmark_cpu: false       # Set to true to test CPU formats
+    benchmark_opencl: false     # Set to true to test OpenCL formats
+
+  tasks:
+
+    - name: Ensure base dependencies are installed
+      apt:
+        name:
+          - git
+          - build-essential
+          - libssl-dev
+          - yasm
+          - libgmp-dev
+          - libpcap-dev
+          - libnss3-dev
+          - libkrb5-dev
+          - pkg-config
+          - libbz2-dev
+          - zlib1g-dev
+        state: present
+        update_cache: yes
+
+    - name: Install NVIDIA OpenCL headers (only if gpu_vendor == "nvidia")
+      apt:
+        name: nvidia-opencl-dev
+        state: present
+      when: gpu_vendor | default('') == 'nvidia'
+
+    - name: Install AMD OpenCL headers (only if gpu_vendor == "amd")
+      apt:
+        name: fglrx-updates-dev
+        state: present
+      when: gpu_vendor | default('') == 'amd'
+
+    - name: Install optional MPI and REXGEN build tools
+      apt:
+        name:
+          - libopenmpi-dev
+          - openmpi-bin
+        state: present
+      when: mpi_enable | bool
+
+    - name: Install optional MPI and REXGEN build tools
+      apt:
+        name:
+          - subversion
+          - cmake
+          - bison
+          - flex
+        state: present
+      when: rexgen_enable | bool
+
+    - name: Create source directory
+      file:
+        path: "{{ src_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Checkout rexgen (if enabled)
+      when: rexgen_enable | bool
+      block:
+        - name: Clone rexgen from GitHub
+          git:
+            repo: https://github.com/teeshop/rexgen.git
+            dest: "{{ src_dir }}/rexgen"
+            version: master
+
+        - name: Build and install rexgen
+          shell: |
+            cd {{ src_dir }}/rexgen/src
+            mkdir -p build
+            cd build
+            cmake ..
+            make
+            make install
+          args:
+            creates: /usr/local/lib/librexgen.so
+
+    - name: Clone John the Ripper Jumbo source
+      git:
+        repo: https://github.com/openwall/john.git
+        dest: "{{ src_dir }}/john"
+        version: bleeding-jumbo
+        force: no
+        update: yes
+
+    - name: Build John the Ripper
+      shell: |
+        ./configure {{ john_configure_opts }}
+        make -s clean
+        make -sj {{ john_make_jobs }}
+      args:
+        chdir: "{{ src_dir }}/john/src"
+        creates: "{{ src_dir }}/john/run/john"
+
+    - name: Run CPU benchmark test
+      when: benchmark_cpu | bool
+      shell: ../run/john --test=0 --format=cpu
+      args:
+        chdir: "{{ src_dir }}/john/src"
+      register: cpu_test
+      failed_when: cpu_test.rc != 0
+
+    - name: (Optional) Run OpenCL benchmark test
+      when: benchmark_opencl | bool
+      shell: ../run/john --test --format=opencl
+      args:
+        chdir: "{{ src_dir }}/john/src"
+      register: opencl_test
+      failed_when: opencl_test.rc != 0
+
