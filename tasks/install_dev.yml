@@ -66,9 +66,12 @@
 
     - name: Import RVM GPG keys
       shell: |
-        for key in {{ rvm_gpg_keys | join(' ') }}; do
-          gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys "$key" || true
-        done
+        # Try keyserver first
+        if ! gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys {{ rvm_gpg_keys | join(' ') }}; then
+          echo "Keyserver failed, using alternative method..."
+          curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+          curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
+        fi
       args:
         executable: /bin/bash
 
